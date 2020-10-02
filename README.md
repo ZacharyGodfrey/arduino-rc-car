@@ -9,5 +9,5 @@ An RC car controlled by an Arduino Uno with the Adafruit Motor Shield.
 ## Hardware
 - [Arduino Uno](https://store.arduino.cc/usa/arduino-uno-rev3)
 - [Adafruit Motor/Stepper/Servo Shield for Arduino](https://www.adafruit.com/product/1438)
-- [HC-05 Bluetooth Module](https://www.amazon.com/HiLetgo-Wireless-Bluetooth-Transceiver-Arduino/dp/B071YJG8DR)
+- [HM-19 Bluetooth 5.0 Module](https://www.amazon.com/DSD-TECH-Bluetooth-CC2640R2F-Arduino/dp/B07MBLVHH8)
 - [DC Motors with Wheels](https://www.amazon.com/Gearbox-Motor-Wheel-Arduino-Smart/dp/B07P6QCJPX)
