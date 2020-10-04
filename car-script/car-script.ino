@@ -1,90 +1,123 @@
-#include <Adafruit_MotorShield.h> // Adafruit Motor Shield V2
+// Adafruit Motor Shield V2
+#include <Adafruit_MotorShield.h>
+
+// RF24 for radio frequency input
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
+#define SERIAL_BIT_RATE 9600
+
+#define RADIO_PIN_CE 7
+#define RADIO_PIN_CSN 8
+#define RADIO_ADDRESS "RCCAR"
 
 Adafruit_MotorShield motorShield = Adafruit_MotorShield();
 Adafruit_DCMotor *leftFront = motorShield.getMotor(1);
 Adafruit_DCMotor *leftRear = motorShield.getMotor(2);
 Adafruit_DCMotor *rightFront = motorShield.getMotor(3);
 Adafruit_DCMotor *rightRear = motorShield.getMotor(4);
+RF24 radio(RADIO_PIN_CE, RADIO_PIN_CSN);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(SERIAL_BIT_RATE);
   motorShield.begin();
+  radio.begin();
+  radio.openReadingPipe(0, byte(RADIO_ADDRESS));
+  radio.setPALevel(RF24_PA_MIN);
+  radio.startListening();
 }
 
 void loop() {
-  Serial.println("Forward:50");
+  Serial.println("Reading and processing 2 characters from RF");
+  
+  processInput(readInput(2));
+  
+  delay(2000);
+  
+  // testDrive();
+}
+
+char* readInput(const unsigned int size) {
+  if (!radio.available()) return NULL;
+  
+  char input[size];
+  radio.read(&input, size);
+
+  return &input;
+}
+
+void processInput(const char* input) {
+  if (input == "ff") Serial.println("Forward:Slow"); return;
+  if (input == "FF") Serial.println("Forward:Fast"); return;
+  if (input == "bb") Serial.println("Backward:Slow"); return;
+  if (input == "BB") Serial.println("Backward:Fast"); return;
+  if (input == "ll") Serial.println("Left:Slow"); return;
+  if (input == "LL") Serial.println("Left:Fast"); return;
+  if (input == "rr") Serial.println("Right:Slow"); return;
+  if (input == "RR") Serial.println("Right:Fast"); return;
+}
+
+void testDrive() {
   moveForward(50);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Forward:100");
   moveForward(100);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Forward:150");
   moveForward(150);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Forward:200");
   moveForward(200);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Forward:250");
   moveForward(250);
   delay(2000);
   // Don't stop motors here, carry momentum into the coast
 
-  Serial.println("Coasting...");
   coastMotors();
   delay(4000);
   
-  Serial.println("Backward:50");
   moveBackward(50);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Backward:100");
   moveBackward(100);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Backward:150");
   moveBackward(150);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Backward:200");
   moveBackward(200);
   delay(2000);
   stopMotors();
   delay(1000);
   
-  Serial.println("Backward:250");
   moveBackward(250);
   delay(2000);
   // Don't stop motors here, carry momentum into the coast
 
-  Serial.println("Coasting...");
   coastMotors();
   delay(4000);
 
-  Serial.println("Left:50");
   moveLeft(50);
   delay(2000);
   stopMotors();
   delay(1000);
 
-  Serial.println("Right:50");
   moveRight(50);
   delay(2000);
   stopMotors();
@@ -92,6 +125,8 @@ void loop() {
 }
 
 void stopMotors() {
+  Serial.println("STOPPING all motors");
+  
   leftFront->setSpeed(0);
   rightFront->setSpeed(0);
   leftRear->setSpeed(0);
@@ -99,6 +134,8 @@ void stopMotors() {
 }
 
 void coastMotors() {
+  Serial.println("COASTING all motors");
+  
   leftFront->run(RELEASE);
   rightFront->run(RELEASE);
   leftRear->run(RELEASE);
@@ -106,6 +143,9 @@ void coastMotors() {
 }
 
 void moveForward(uint8_t speed) {
+  Serial.print("Moving FORWARD at ");
+  Serial.println(speed, DEC);
+  
   leftFront->setSpeed(speed);
   rightFront->setSpeed(speed);
   
@@ -120,6 +160,9 @@ void moveForward(uint8_t speed) {
 }
 
 void moveBackward(uint8_t speed) {
+  Serial.print("Moving BACKWARD at ");
+  Serial.println(speed, DEC);
+  
   leftFront->setSpeed(speed);
   rightFront->setSpeed(speed);
   
@@ -134,6 +177,9 @@ void moveBackward(uint8_t speed) {
 }
 
 void moveLeft(uint8_t speed) {
+  Serial.print("Moving LEFT at ");
+  Serial.println(speed, DEC);
+  
   leftFront->setSpeed(speed);
   leftRear->setSpeed(speed);
   
@@ -148,6 +194,9 @@ void moveLeft(uint8_t speed) {
 }
 
 void moveRight(uint8_t speed) {
+  Serial.print("Moving RIGHT at ");
+  Serial.println(speed, DEC);
+  
   leftFront->setSpeed(speed);
   leftRear->setSpeed(speed);
   
