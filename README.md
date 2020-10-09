@@ -7,7 +7,7 @@ A simple remote-controlled car. The car uses an Arduino Uno as its brain; it rec
 ### Purchased Parts
 
 |Quantity|Unit Price|Item|
-|--:|:--|--:|
+|--:|--:|:--|
 |1|$23.00|[Arduino Uno Rev3](https://store.arduino.cc/usa/arduino-uno-rev3)|
 |1|$19.95|[Adafruit Motor Shield for Arduino v2 Kit](https://www.adafruit.com/product/1438)|
 |1|$8.99|[NRF24L01+PA+LNA Wireless RF Transceiver Module (2 pack)](https://www.amazon.com/HiLetgo%C2%AE-NRF24L01-Wireless-Transceiver-Compatible/dp/B00WG9HO6Q)|
@@ -27,11 +27,11 @@ To be determined.
 
 ## Software
 
-## The Remote
+### The Remote
 
 The remote constantly checks the value of each of the input devices. It then checks which state the combination of values correspond to and sends that state value to the car via a radio frequency transceiver.
 
-## The Car
+### The Car
 
 The car constantly checks for a new state value coming from the remote via a radio frequency transceiver. If the incoming state value is valid and is different from the car's current state (repeated inputs are ignored) then the car will adjust the motors according to the new state.
 
