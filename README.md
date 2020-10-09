@@ -7,14 +7,14 @@ A simple remote-controlled car that combines 3D modeling and 3D printing with el
 ## Contents
 
 - [The Car](#the-car)
-  - [3D Printed Parts](#the-car)
-  - [Purchased Parts](#the-car)
-  - [Assembly](#the-car)
+  - [3D Printed Parts](#3d-printed-parts)
+  - [Purchased Parts](#purchased-parts)
+  - [Assembly](#assembly)
 - [The Remote](#the-remote)
-  - [3D Printed Parts](#the-remote)
-  - [Purchased Parts](#the-remote)
-  - [Assembly](#the-car)
-- [State Communication](#state-communication)
+  - [3D Printed Parts](#3d-printed-parts-1)
+  - [Purchased Parts](#purchased-parts-1)
+  - [Assembly](#assembly-1)
+- [Communication](#communication)
 - [To-Do List](#to-do-list)
 - [Future Upgrades](#future-upgrades)
 - [References](#references)
@@ -64,7 +64,7 @@ To be determined.
 
 To be determined.
 
-## State Communication
+## Communication
 
 The remote sends the desired state to the car as a single integer value. The following table lists all of the available states:
 
