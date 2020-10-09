@@ -1,8 +1,31 @@
 # Arduino RC Car
 
-A simple remote-controlled car. The car uses an Arduino Uno as its brain; it receives input through an RF transceiver and uses an Adafruit Motor Shield to control 4 DC motors connected to the wheels. Turning the car left and right is achieved by altering the speed and/or direction of the motors on each side of the car.
+A simple remote-controlled car that combines 3D modeling and 3D printing with electronics and embedded systems programming.
 
-## Hardware
+**Note:** This project is my first attempt at using a micro-controller and writing C++. The code probably isn't perfect, but it gets the job done in a way that is (hopefully) easy to follow.
+
+## Contents
+
+- [The Car](#the-car)
+  - [3D Printed Parts](#the-car)
+  - [Purchased Parts](#the-car)
+  - [Assembly](#the-car)
+- [The Remote](#the-remote)
+  - [3D Printed Parts](#the-remote)
+  - [Purchased Parts](#the-remote)
+  - [Assembly](#the-car)
+- [State Communication](#state-communication)
+- [To-Do List](#to-do-list)
+- [Future Upgrades](#future-upgrades)
+- [References](#references)
+
+## The Car
+
+The car constantly checks for a new state value coming from the remote via an RF transceiver. If the incoming state value is valid and is different from the car's current state (repeated inputs are ignored) then the car will adjust the motors according to the new state.
+
+### 3D Printed Parts
+
+To be determined.
 
 ### Purchased Parts
 
@@ -21,37 +44,55 @@ A simple remote-controlled car. The car uses an Arduino Uno as its brain; it rec
 
 **Total Price:** $93.01 (pre-tax)
 
+### Assembly
+
+To be determined.
+
+## The Remote
+
+The remote constantly checks the value of each of the input buttons. It then maps the combination of values to a corresponding state value and sends that value to the car via an RF transceiver.
+
 ### 3D Printed Parts
 
 To be determined.
 
-## Software
+### Purchased Parts
 
-### The Remote
+To be determined.
 
-The remote constantly checks the value of each of the input devices. It then checks which state the combination of values correspond to and sends that state value to the car via a radio frequency transceiver.
+### Assembly
 
-### The Car
+To be determined.
 
-The car constantly checks for a new state value coming from the remote via a radio frequency transceiver. If the incoming state value is valid and is different from the car's current state (repeated inputs are ignored) then the car will adjust the motors according to the new state.
-
-### Communication
+## State Communication
 
 The remote sends the desired state to the car as a single integer value. The following table lists all of the available states:
 
-|Input Value|Car State|
-|--:|:--|
-|0|None - The car's initial state, ignored if sent from the remote|
-|1|Stop - Lock motors and prevent the wheels from turning|
-|2|Coast - Release motors and allow the wheels to spin freely|
-|3|Move Forward Slowly|
-|4|Move Forward Quickly|
-|5|Move Backward Slowly|
-|6|Move Backward Quickly|
-|7|Rotate Left Slowly|
-|8|Rotate Left Quickly|
-|9|Rotate Right Slowly|
-|10|Rotate Right Quickly|
+|Input Value|Car State|Description|
+|--:|:--|:--|
+|0|`STATE_NONE`|The initial state, ignored if sent from the remote|
+|1|`STATE_BRAKE`|Lock motors and prevent the wheels from turning|
+|2|`STATE_COAST`|Release motors and allow the wheels to spin freely|
+|3|`STATE_DRIVE_SLOW`|Move forward at the defined slow speed|
+|4|`STATE_DRIVE_FAST`|Move forward at the defined fast speed|
+|5|`STATE_REVERSE_SLOW`|Move backward at the defined slow speed|
+|6|`STATE_REVERSE_FAST`|Move backward at the defined fast speed|
+|7|`STATE_LEFT_SLOW`|Rotate left (counter-clockwise) at the defined slow speed|
+|8|`STATE_LEFT_FAST`|Rotate left (counter-clockwise) at the defined fast speed|
+|9|`STATE_RIGHT_SLOW`|Rotate right (clockwise) at the defined slow speed|
+|10|`STATE_RIGHT_FAST`|Rotate right (clockwise) at the defined slow speed|
+
+## To-Do List
+
+- 3D model, print, and assemble car body
+- Research and purchase electronics for remote
+- 3D model, print, and assemble remote
+- Test functionality and tweak settings
+- Remove `TODO` statements in scripts
+
+## Future Upgrades
+
+In a future version, I'd like to refine the driving so that the car moves more like a car - able to make slight direction changes while moving forward/backward instead of having to stop and rotate. This will probably require the remote to send some indication of the desired X (left/right) and Y (forward/backward) velocities.
 
 ## References
 
