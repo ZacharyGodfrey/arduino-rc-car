@@ -7,121 +7,96 @@
 #include <RF24.h>
 
 #define SERIAL_BIT_RATE 9600
+#define LOOP_DELAY_MS 2000
 
 #define RADIO_PIN_CE 7
 #define RADIO_PIN_CSN 8
 #define RADIO_ADDRESS "RCCAR"
+
+#define INPUT_NONE 0
+#define INPUT_STOP 1
+#define INPUT_COAST 2
+#define INPUT_FORWARD_SLOW 3
+#define INPUT_FORWARD_FAST 4
+#define INPUT_BACKWARD_SLOW 5
+#define INPUT_BACKWARD_FAST 6
+#define INPUT_LEFT_SLOW 7
+#define INPUT_LEFT_FAST 8
+#define INPUT_RIGHT_SLOW 9
+#define INPUT_RIGHT_FAST 10
+
+#define SPEED_SLOW 50
+#define SPEED_FAST 200
 
 Adafruit_MotorShield motorShield = Adafruit_MotorShield();
 Adafruit_DCMotor *leftFront = motorShield.getMotor(1);
 Adafruit_DCMotor *leftRear = motorShield.getMotor(2);
 Adafruit_DCMotor *rightFront = motorShield.getMotor(3);
 Adafruit_DCMotor *rightRear = motorShield.getMotor(4);
+
 RF24 radio(RADIO_PIN_CE, RADIO_PIN_CSN);
+
+uint8_t currentState = 0;
 
 void setup() {
   Serial.begin(SERIAL_BIT_RATE);
+  
   motorShield.begin();
+
+  const byte radioAddress[6] = RADIO_ADDRESS;
+  
   radio.begin();
-  radio.openReadingPipe(0, byte(RADIO_ADDRESS));
+  radio.openReadingPipe(0, radioAddress);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
 }
 
 void loop() {
-  Serial.println("Reading and processing 2 characters from RF");
+  uint8_t newInput = INPUT_FORWARD_SLOW; // readInput();
+
+  processInput(newInput);
   
-  processInput(readInput(2));
-  
-  delay(2000);
-  
-  // testDrive();
+  if (LOOP_DELAY_MS > 0) delay(LOOP_DELAY_MS);
 }
 
-char* readInput(const unsigned int size) {
-  if (!radio.available()) return NULL;
+uint8_t readInput() {
+  if (!radio.available()) return INPUT_NONE;
   
-  char input[size];
-  radio.read(&input, size);
+  uint8_t input;
+  
+  radio.read(&input, sizeof(input));
 
-  return &input;
+  return input;
 }
 
-void processInput(const char* input) {
-  if (input == "ff") Serial.println("Forward:Slow"); return;
-  if (input == "FF") Serial.println("Forward:Fast"); return;
-  if (input == "bb") Serial.println("Backward:Slow"); return;
-  if (input == "BB") Serial.println("Backward:Fast"); return;
-  if (input == "ll") Serial.println("Left:Slow"); return;
-  if (input == "LL") Serial.println("Left:Fast"); return;
-  if (input == "rr") Serial.println("Right:Slow"); return;
-  if (input == "RR") Serial.println("Right:Fast"); return;
-}
+void processInput(const uint8_t input) {
+  Serial.print("Processing input: ");
+  Serial.println(input, DEC);
 
-void testDrive() {
-  moveForward(50);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveForward(100);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveForward(150);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveForward(200);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveForward(250);
-  delay(2000);
-  // Don't stop motors here, carry momentum into the coast
+  if (input == currentState) Serial.println("Ignoring repeated input."); return;
 
-  coastMotors();
-  delay(4000);
-  
-  moveBackward(50);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveBackward(100);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveBackward(150);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveBackward(200);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-  
-  moveBackward(250);
-  delay(2000);
-  // Don't stop motors here, carry momentum into the coast
+  switch (input) {
+    case INPUT_NONE: Serial.println("No input available."); return;
+    
+    case INPUT_STOP: stopMotors(); break;
+    case INPUT_COAST: coastMotors(); break;
+    
+    case INPUT_FORWARD_SLOW: moveForward(SPEED_SLOW); break;
+    case INPUT_FORWARD_FAST: moveForward(SPEED_FAST); break;
+    
+    case INPUT_BACKWARD_SLOW: moveBackward(SPEED_SLOW); break;
+    case INPUT_BACKWARD_FAST: moveBackward(SPEED_FAST); break;
+    
+    case INPUT_LEFT_SLOW: moveLeft(SPEED_SLOW); break;
+    case INPUT_LEFT_FAST: moveLeft(SPEED_FAST); break;
+    
+    case INPUT_RIGHT_SLOW: moveRight(SPEED_SLOW); break;
+    case INPUT_RIGHT_FAST: moveRight(SPEED_FAST); break;
 
-  coastMotors();
-  delay(4000);
+    default: Serial.println("Invalid input."); return;
+  }
 
-  moveLeft(50);
-  delay(2000);
-  stopMotors();
-  delay(1000);
-
-  moveRight(50);
-  delay(2000);
-  stopMotors();
-  delay(1000);
+  currentState = input;
 }
 
 void stopMotors() {
@@ -208,4 +183,70 @@ void moveRight(uint8_t speed) {
   
   rightFront->run(BACKWARD);
   rightRear->run(BACKWARD);
+}
+
+void testDrive() {
+  moveForward(50);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveForward(100);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveForward(150);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveForward(200);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveForward(250);
+  delay(2000);
+  // Don't stop motors here, carry momentum into the coast
+
+  coastMotors();
+  delay(4000);
+  
+  moveBackward(50);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveBackward(100);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveBackward(150);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveBackward(200);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+  
+  moveBackward(250);
+  delay(2000);
+  // Don't stop motors here, carry momentum into the coast
+
+  coastMotors();
+  delay(4000);
+
+  moveLeft(50);
+  delay(2000);
+  stopMotors();
+  delay(1000);
+
+  moveRight(50);
+  delay(2000);
+  stopMotors();
+  delay(1000);
 }
