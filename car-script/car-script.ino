@@ -6,11 +6,12 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-// Settings
 #define BAUD_RATE 9600
+
 #define RADIO_PIN_CE 7
 #define RADIO_PIN_CSN 8
 #define RADIO_ADDRESS "RCCAR"
+
 #define STATE_NONE 0
 #define STATE_BRAKE 1
 #define STATE_COAST 2
@@ -22,6 +23,7 @@
 #define STATE_LEFT_FAST 8
 #define STATE_RIGHT_SLOW 9
 #define STATE_RIGHT_FAST 10
+
 #define SPEED_SLOW 50
 #define SPEED_FAST 200
 
