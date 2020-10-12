@@ -38,11 +38,11 @@ To be determined.
 |4|$1.32|[M3x35mm Screws (2 pack)](https://www.homedepot.com/p/M3-0-5-x-35-mm-Internal-Hex-Metric-Socket-Head-Cap-Screw-2-Pack-844518/204283594)|
 |2|$0.65|[M3 Lock Washers (4 pack)](https://www.homedepot.com/p/Everbilt-M3-4-Piece-Stainless-Steel-Metric-Lock-Washer-842398/204993665)|
 |4|$0.56|[M3 Hex Nuts (2 pack)](https://www.homedepot.com/p/Everbilt-M3-5-Stainless-Steel-Metric-Hex-Nut-2-Piece-per-Bag-842318/204836105)|
-|1|$2.50|[Inline Power Switch with 2.1mm Barrel Jack](https://www.adafruit.com/product/1125)|
-|1|$5.79|[6 AA Battery Box with 2.1mm Barrel Jack (2 pack)](https://www.amazon.com/Battery-Holder-Connector-Output-Pack/dp/B07XP7H9PB)|
+|1|$2.50|[Inline Power Switch with 2.1mm DC Barrel Jack](https://www.adafruit.com/product/1125)|
+|1|$3.95|[5 AA Battery Holder with 2.1mm DC Barrel Jack](https://www.adafruit.com/product/3456)|
 |1|$6.98|[Dupont Wire Kit](https://www.amazon.com/Elegoo-EL-CP-004-Multicolored-Breadboard-arduino/dp/B01EV70C78)|
 
-**Total Price:** $93.01 (pre-tax)
+**Total Price:** $91.17 (pre-tax)
 
 ### Assembly
 

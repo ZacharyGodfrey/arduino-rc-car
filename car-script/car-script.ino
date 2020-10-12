@@ -29,9 +29,9 @@
 
 Adafruit_MotorShield motorShield = Adafruit_MotorShield();
 Adafruit_DCMotor *leftFront = motorShield.getMotor(1);
+Adafruit_DCMotor *rightFront = motorShield.getMotor(4);
 Adafruit_DCMotor *leftRear = motorShield.getMotor(2);
-Adafruit_DCMotor *rightFront = motorShield.getMotor(3);
-Adafruit_DCMotor *rightRear = motorShield.getMotor(4);
+Adafruit_DCMotor *rightRear = motorShield.getMotor(3);
 
 RF24 radio(RADIO_PIN_CE, RADIO_PIN_CSN);
 
@@ -51,19 +51,15 @@ void setup() {
 }
 
 void loop() {
-  uint8_t nextState = getNextState();
+  uint8_t nextState = getNextState(radio);
   bool stateChanged = processNextState(nextState);
 
   if (stateChanged) {
     currentState = nextState;
   }
-
-  delay(2000); // TODO: Remove after testing.
 }
 
-uint8_t getNextState() {
-  return STATE_DRIVE_SLOW; // TODO: Remove after testing.
-
+uint8_t getNextState(const RF24 radio) {
   if (!radio.available()) {
     return STATE_NONE;
   }
@@ -101,7 +97,7 @@ bool processNextState(const uint8_t nextState) {
 }
 
 bool brake() {
-  Serial.println("STOPPING all motors");
+  Serial.println("Brake");
 
   leftFront->setSpeed(0);
   rightFront->setSpeed(0);
@@ -112,7 +108,7 @@ bool brake() {
 }
 
 bool coast() {
-  Serial.println("COASTING all motors");
+  Serial.println("Coast");
 
   leftFront->run(RELEASE);
   rightFront->run(RELEASE);
@@ -123,7 +119,7 @@ bool coast() {
 }
 
 bool drive(const uint8_t speed) {
-  Serial.print("Moving FORWARD at ");
+  Serial.print("Drive:");
   Serial.println(speed, DEC);
 
   leftFront->setSpeed(speed);
@@ -142,7 +138,7 @@ bool drive(const uint8_t speed) {
 }
 
 bool reverse(const uint8_t speed) {
-  Serial.print("Moving BACKWARD at ");
+  Serial.print("Reverse:");
   Serial.println(speed, DEC);
 
   leftFront->setSpeed(speed);
@@ -161,7 +157,7 @@ bool reverse(const uint8_t speed) {
 }
 
 bool turnLeft(const uint8_t speed) {
-  Serial.print("Moving LEFT at ");
+  Serial.print("Left:");
   Serial.println(speed, DEC);
 
   leftFront->setSpeed(speed);
@@ -180,7 +176,7 @@ bool turnLeft(const uint8_t speed) {
 }
 
 bool turnRight(const uint8_t speed) {
-  Serial.print("Moving RIGHT at ");
+  Serial.print("Right:");
   Serial.println(speed, DEC);
 
   leftFront->setSpeed(speed);
